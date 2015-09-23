@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# Find out where current script is executing from and
+#   add to path
+scriptdir=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+PATH="${scriptdir}:$PATH"
+
+# Find and add functions
+fuctionsdir=$( cd "${scriptdir}/../functions/" && pwd )
+for file in $(ls ${functionsdir}); do
+  . $file
+done
+
+if [ -z ${ConfigFile} ]; then
+  export ConfigFile="github:JungleCatSoftware/CloudConfigs/configs/example@master"
+fi
+
+updatePackageManager
+upgradePackages
+
+# Download the config file
+if ! file=$(download_file "${ConfigFile}"); then
+  echo "Error downloading ConfigFile: ${ConfigFile}" >&2
+  exit 1
+fi
+
+# Source the file
+. $file
