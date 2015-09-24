@@ -44,3 +44,5 @@ function download_file {
     fi
   fi
 }
+
+export -f download_file

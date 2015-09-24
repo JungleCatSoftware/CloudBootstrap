@@ -3,7 +3,7 @@
 # Find out where current script is executing from and
 #   add to path
 scriptdir=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-PATH="${scriptdir}:$PATH"
+export PATH="${scriptdir}:$PATH"
 
 # Find and add functions
 functionsdir=$( cd "${scriptdir}/../functions/" && pwd )

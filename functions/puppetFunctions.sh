@@ -7,3 +7,5 @@ function installPuppetModules {
     echo "TODO: install ${mod}"
   done
 }
+
+export -f installPuppetModules
