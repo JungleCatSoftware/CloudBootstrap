@@ -26,14 +26,11 @@ if ! file=$(download_file "${ConfigFile}"); then
   exit 1
 fi
 
+# Add export to vars in file
+sed -i -E 's/^(export )?([[:alpha:]][[:alnum:]_]*=)/export \2/' "${file}"
+
 # Source the file
 . "${file}"
-
-# Export vars in file
-vars=($(grep -E '^[[:alpha:]][[:alnum:]_]*=' "${file}"))
-for var in "${vars[@]}"; do
-  export $(echo "${var%%=*}")
-done
 
 if ! [[ "x${CONFIG_MANAGER}" == "x" ]]; then
   installConfigManager "${CONFIG_MANAGER}"
