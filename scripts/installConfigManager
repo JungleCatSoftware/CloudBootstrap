@@ -1,0 +1,23 @@
+#!/bin/bash
+
+if [ $# == 1 ]; then
+  CONFIG_MANAGER=$1
+fi
+
+CONFIG_MANAGER=$(echo "${CONFIG_MANAGER}" | tr '[:upper:]' '[:lower;]')
+
+if [[ "x${CONFIG_MANAGER}" == "x" ]]; then
+  echo "No config manager to install" >&2
+  exit 1
+elif [[ "${CONFIG_MANAGER}" == "puppet" ]]; then
+  DEBIAN_FRONTEND=noninteractive apt-get install --assume-yes -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" puppet
+
+  if declare -p PUPPET_MODULES 2>/dev/null | grep -q '^declare \-a'; then
+    installPuppetModules "${PUPPET_MODULES[@]}"
+  elif ! [[ "x${PUPPET_MODULES}" == "x" ]]; then
+    installPuppetModules "${PUPPET_MODULES}"
+  fi
+else
+  echo "Invalid Config Manager: ${CONFIG_MANAGER}" >&2
+  exit 2
+fi
