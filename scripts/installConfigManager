@@ -16,6 +16,8 @@ elif [[ "${CONFIG_MANAGER}" == "puppet" ]]; then
     installPuppetModules "${PUPPET_MODULES[@]}"
   elif ! [[ "x${PUPPET_MODULES}" == "x" ]]; then
     installPuppetModules "${PUPPET_MODULES}"
+  else
+    echo "No Puppet modules to install"
   fi
 else
   echo "Invalid Config Manager: ${CONFIG_MANAGER}" >&2
