@@ -1,10 +1,25 @@
 function installPuppetModules {
   if [ $# -lt 1 ]; then
     echo "No Puppet modules defined" >&2
+    return 1
   fi
 
   for mod in "$@"; do
-    echo "TODO: install ${mod}"
+    echo "Installing Puppet module: ${mod}"
+    if [[ "${mod}" =~ ^forge: ]]; then
+      echo "    forge module"
+    else
+      if file="$(download_file "${mod}")"; then
+        json=$(tar -xf "${file}" --to-stdout "$(tar -tf "${file}" | grep -E '[^/]*/metadata.json')")
+        arr=($(echo "${json}" | python -c 'import json,sys; obj=json.load(sys.stdin); print obj["name"]+"\n"+obj["version"];'))
+        newfile="${file%%/*}/${arr[0]}-${arr[1]}.tar.gz"
+        ln "${file}" "${newfile}"
+        puppet module install "${newfile}" --ignore-dependencies
+      else
+        echo "Failed to download ${mod}" >&2
+        return 2
+      fi
+    fi
   done
 }
 
