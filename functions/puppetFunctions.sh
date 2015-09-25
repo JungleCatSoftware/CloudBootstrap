@@ -7,7 +7,12 @@ function installPuppetModules {
   for mod in "$@"; do
     echo "Installing Puppet module: ${mod}"
     if [[ "${mod}" =~ ^forge: ]]; then
-      echo "    forge module"
+      mod="${mod#forge:}"
+      if [[ "${mod}" == "${mod%@*}" ]]; then
+        puppet module install "${mod}"
+      else
+        puppet module install "${mod%@*}" --version "${mod#*@}"
+      fi
     else
       if file="$(download_file "${mod}")"; then
         json=$(tar -xf "${file}" --to-stdout "$(tar -tf "${file}" | grep -E '[^/]*/metadata.json')")
