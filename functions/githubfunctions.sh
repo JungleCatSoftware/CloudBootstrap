@@ -11,9 +11,9 @@ function github_parse_path {
     return 2
   fi
 
-  user=$([[ ${loc} =~ ^github:([[:alnum:]]*) ]] && echo ${BASH_REMATCH[1]} || return 3)
-  repo=$([[ ${loc} =~ ^github:[[:alnum:]]*/([[:alnum:]]*) ]] && echo ${BASH_REMATCH[1]} || return 3)
-  filepath=$([[ ${loc} =~ ^github:([[:alnum:]]*/){2}([^@]*)(@|$) ]] && echo ${BASH_REMATCH[2]})
+  user=$([[ ${loc} =~ ^github:([^/@]*) ]] && echo ${BASH_REMATCH[1]} || return 3)
+  repo=$([[ ${loc} =~ ^github:[^/@]*/([^/@]*) ]] && echo ${BASH_REMATCH[1]} || return 3)
+  filepath=$([[ ${loc} =~ ^github:([^/@]*/){2}([^@]*)(@|$) ]] && echo ${BASH_REMATCH[2]})
   tag=$([[ ${loc} =~ @(.*)$ ]] && echo ${BASH_REMATCH[1]} || echo "master")
 
   if [[ "x${filepath}" == "x" ]]; then
