@@ -29,7 +29,7 @@ function download_file {
   filename=${dir}/${url##*/}
 
   if which curl >/dev/null; then
-    if curl --silent --output "${filename}" "${url}"; then
+    if curl --location --silent --output "${filename}" "${url}"; then
       echo ${filename}
     else
       echo "Curl command failed" >&2
