@@ -23,7 +23,7 @@ The CloudBootstrap scripts make use of various file locators, which are shorthan
  - https://
 
 ### Puppet Forge Locator
-The Puppet Forge locator refers to a Puppet Module on the public Puppet Forge. It follows the form "forge:USER-MODULE(@VERSION)" where USER is the name of the account that uploaded the module, MODULE is the name of the module, and VERSION is an optional version to fetch (defaults to the latest). The following are all valid examples:
+The Puppet Forge locator refers to a Puppet Module on the public Puppet Forge. This locator is only valid in the `CONFIG_MODULES` variable when using the "puppet" `CONFIG_MANAGER` and cannot be used in any other context. It follows the form "forge:USER-MODULE(@VERSION)" where USER is the name of the account that uploaded the module, MODULE is the name of the module, and VERSION is an optional version to fetch (defaults to the latest). The following are all valid examples:
  - "forge:puppetlabs-stdlib"
  - "forge:jfryman-nginx@0.2.6"
 
