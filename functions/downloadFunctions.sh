@@ -1,4 +1,4 @@
-function download_file {
+function getfile {
   if [ $# == 1 ]; then
     file=$1
   else
@@ -45,4 +45,4 @@ function download_file {
   fi
 }
 
-export -f download_file
+export -f getfile

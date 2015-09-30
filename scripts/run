@@ -21,7 +21,7 @@ updatePackageManager
 upgradePackages
 
 # Download the config file
-if ! file=$(download_file "${ConfigFile}"); then
+if ! file=$(getfile "${ConfigFile}"); then
   echo "Error downloading ConfigFile: ${ConfigFile}" >&2
   exit 1
 fi

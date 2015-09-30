@@ -14,7 +14,7 @@ function installPuppetModules {
         puppet module install "${mod%@*}" --version "${mod#*@}"
       fi
     else
-      if file="$(download_file "${mod}")"; then
+      if file="$(getfile "${mod}")"; then
         json=$(tar -xf "${file}" --to-stdout "$(tar -tf "${file}" | grep -E '[^/]*/metadata.json')")
         arr=($(echo "${json}" | python -c 'import json,sys; obj=json.load(sys.stdin); print obj["name"]+"\n"+obj["version"];'))
         newfile="${file%%/*}/${arr[0]}-${arr[1]}.tar.gz"
