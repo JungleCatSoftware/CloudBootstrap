@@ -14,7 +14,7 @@ for file in $(ls ${functionsdir}); do
 done
 
 if [ -z ${ConfigFile} ]; then
-  export ConfigFile="github:JungleCatSoftware/CloudConfigs/configs/example@master"
+  export ConfigFile="github:JungleCatSoftware/CloudConfigs/example/config@master"
 fi
 
 updatePackageManager
