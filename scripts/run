@@ -32,6 +32,15 @@ sed -i -E 's/^(export )?([[:alpha:]][[:alnum:]_]*=)/export \2/' "${file}"
 # Source the file
 . "${file}"
 
-if ! [[ "x${CONFIG_MANAGER}" == "x" ]]; then
-  installConfigManager "${CONFIG_MANAGER}" "${CONFIG_MODULES[@]}"
+CONFIG_MANAGER=$(echo "${CONFIG_MANAGER}" | tr '[:upper:]' '[:lower:]')
+
+if [[ "x${CONFIG_MANAGER}" == "x" ]]; then
+  echo "No config manager to install" >&2
+elif [[ "x${CONFIG_MANAGER}" == "xpuppet" ]]; then
+  installPuppet
+  if [ ${#PUPPET_MODULES[@]} -ge 1 ]; then
+    installPuppetModules "${PUPPET_MODULES[@]}"
+  fi
+else
+  echo "Invalid Config Manager: ${CONFIG_MANAGER}" >&2
 fi
