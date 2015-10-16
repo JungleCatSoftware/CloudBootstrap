@@ -1,7 +1,7 @@
 #!/bin/bash
 export maintainer=JungleCatSoftware
 export repo=CloudBootstrap
-export release=0.0.1
+export release=0.0.2
 export logdir=/var/log/${maintainer}/${repo}
 targetdir=/opt/${maintainer}
 mkdir -p ${logdir} &&\
