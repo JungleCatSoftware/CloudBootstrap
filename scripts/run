@@ -38,6 +38,13 @@ if [[ "x${CONFIG_MANAGER}" == "x" ]]; then
   echo "No config manager to install" >&2
 elif [[ "x${CONFIG_MANAGER}" == "xpuppet" ]]; then
   installPuppet
+
+  # Librarian-Puppet config file
+  if ! [[ "x${PUPPET_LIBRARIAN_FILE}" == "x" ]]; then
+    installLibrarianPuppetModules "${PUPPET_LIBRARIAN_FILE}"
+  fi
+
+  # Manually defined modules to download and install
   if [ ${#PUPPET_MODULES[@]} -ge 1 ]; then
     installPuppetModules "${PUPPET_MODULES[@]}"
   fi
