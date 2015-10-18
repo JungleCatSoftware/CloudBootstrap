@@ -56,6 +56,9 @@ elif [[ "x${CONFIG_MANAGER}" == "xpuppet" ]]; then
       getHieraDataFiles "${HIERA_DATA_FILES[@]}"
     fi
   fi
+
+  # Run puppet
+  puppet apply --hiera_config=/etc/puppet/hiera.yaml --modulepath=/etc/puppet/modules --execute "hiera_include('classes')"
 else
   echo "Invalid Config Manager: ${CONFIG_MANAGER}" >&2
 fi
