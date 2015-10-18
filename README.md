@@ -23,7 +23,7 @@ The CloudBootstrap scripts make use of various file locators, which are shorthan
  - https://
 
 ### Puppet Forge Locator
-The Puppet Forge locator refers to a Puppet Module on the public Puppet Forge. This locator is only valid in the `CONFIG_MODULES` variable when using the "puppet" `CONFIG_MANAGER` and cannot be used in any other context. It follows the form "forge:USER-MODULE(@VERSION)" where USER is the name of the account that uploaded the module, MODULE is the name of the module, and VERSION is an optional version to fetch (defaults to the latest). The following are all valid examples:
+The Puppet Forge locator refers to a Puppet Module on the public Puppet Forge. This locator is only valid in the `PUPPET_MODULES` variable and cannot be used in any other context. It follows the form "forge:USER-MODULE(@VERSION)" where USER is the name of the account that uploaded the module, MODULE is the name of the module, and VERSION is an optional version to fetch (defaults to the latest). The following are all valid examples:
  - "forge:puppetlabs-stdlib"
  - "forge:jfryman-nginx@0.2.6"
 
@@ -33,3 +33,30 @@ The GitHub locator reference a GitHub repository or a specific file within a rep
  - "github:camptocamp/puppet-openssl"
  - "github:JungleCatSoftware/CloudConfigs/example/config"
  - "github:JungleCatSoftware/CloudBootstrap/README.md@0.0.1"
+
+## The Config File
+The config file, which is referenced by the `ConfigFile` envionment variable when calling either the `bootstrap.sh` or `scripts/run` is a simple container of variable definitions which are used by the scripts in this repository. The variables that are used are detailed below.
+
+### CONFIG_MANGER
+This variable contains the name of the config manager to configure and install.
+
+Valid values are:
+- puppet
+
+### PUPPET_LIBRARIAN_FILE
+This variable is a file locator to a librarian-puppet Puppetfile. If present, librarian-puppet will be installed, the will file downloaded, and then `librarian-puppet install` will be run to install the modules in the Puppetfile.
+
+### PUPPET_MODULES
+This variable is an array of locators, including the special-case Puppet Forge ("forge:") locator. Each locator must either be a Forge module or a tarball (or a full GitHub repository) containing a Puppet module.
+
+### HIERA_FILE
+The HIERA_FILE variable is a locator for a Hiera YAML file. This file will be downloaded and installed both to `/etc/hiera.yaml` and to `/etc/puppet/hiera.yaml`. It should be sure to reference the other Hiera data files referenced in the HIERA_DATA_FILES variable.
+
+### HIERA_DATA_FILES
+This variable is an array locators and their destination file path in the form of `LOCATOR|ABSOLUTE_FILE_PATH`. For example:
+
+```
+github:JungleCatSoftware/CloudConfigs/example/hiera/example.yaml|/etc/puppet/hieradata/example.yaml
+```
+
+The locator should point to a file to download with a reference to where it should reside of the filesystem. The path should be absolute and should be within the hierchy defined in the hiera.yaml
