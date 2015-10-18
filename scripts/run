@@ -49,8 +49,10 @@ elif [[ "x${CONFIG_MANAGER}" == "xpuppet" ]]; then
     installPuppetModules "${PUPPET_MODULES[@]}"
   fi
 
+  # Download Hiera files
   if ! [[ "x${HIERA_FILE}" == "x" ]]; then
     if getHieraFile "${HIERA_FILE}"; then
+      # No point downloading the datafiles if the main config fails
       getHieraDataFiles "${HIERA_DATA_FILES[@]}"
     fi
   fi
