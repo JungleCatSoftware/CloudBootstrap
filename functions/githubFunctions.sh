@@ -22,7 +22,7 @@ function github_parse_path {
     GitHubURL=$githubraw
   fi
 
-  echo "${GitHubURL}" | sed 's/%user%/'"${user}"'/' | sed 's/%repo%/'"${repo}"'/' | sed 's/%tag%/'"${tag}"'/' | sed 's/%filepath%/'"${filepath/\//\\/}"'/'
+  echo "${GitHubURL}" | sed 's/%user%/'"${user}"'/' | sed 's/%repo%/'"${repo}"'/' | sed 's/%tag%/'"${tag}"'/' | sed 's/%filepath%/'"${filepath//\//\\/}"'/'
 }
 
 export -f github_parse_path
