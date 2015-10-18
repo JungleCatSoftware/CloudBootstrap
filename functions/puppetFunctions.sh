@@ -4,8 +4,10 @@ function installLibrarianPuppetModules {
     return 1
   fi
 
+  dependencies=(build-essential ruby-dev git)
+
   # Install librarian-puppet dependencies
-  DEBIAN_FRONTEND=noninteractive apt-get --assume-yes -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install build-essential ruby-dev
+  DEBIAN_FRONTEND=noninteractive apt-get --assume-yes -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install "${dependencies[@]}"
   # Install librarian-puppet
   gem install librarian-puppet
 
@@ -27,7 +29,7 @@ function installLibrarianPuppetModules {
     success=3
   fi
 
-  DEBIAN_FRONTEND=noninteractive apt-get --assume-yes -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" purge build-essential ruby-dev
+  DEBIAN_FRONTEND=noninteractive apt-get --assume-yes -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" purge "${dependencies[@]}"
   gem uninstall librarian-puppet
   return $success
 }
