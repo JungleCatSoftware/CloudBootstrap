@@ -62,4 +62,47 @@ function installPuppetModules {
   done
 }
 
-export -f installLibrarianPuppetModules installPuppetModules
+function getHieraFile {
+  if [ $# -lt 1 ]; then
+    echo "No Hiera File defined" >&2
+    return 1
+  fi
+
+  if file="$(getfile "${1}")"; then
+    ln "${file}" "/etc/hiera.yaml"
+    ln "${file}" "/etc/puppet/hiera.yaml"
+  fi
+}
+
+function getHieraDataFiles {
+  if [ $# -lt 1 ]; then
+    echo "No Hiera Data Files defined" >&2
+    return 1
+  fi
+
+  for datafile in "$@"; do
+    echo "Installing data file: ${datafile}"
+
+    IFS='|' filearray=(${datafile})
+
+    if [ ${#filearray[@]} -eq 2 ] | [[ "${filearray[1]}" =~ ^/.+$ ]]; then
+      echo "  Downloading \"${filearray[0]}\" to \"${filearray[1]}\""
+      if file="$(getfile "${filearray[0]}")"; then
+        filedir="$(dirname "${filearray[1]}")"
+        if ! [ -d "${filedir}" ]; then
+          mkdir -p "${filedir}"
+        fi
+        ln "${file}" "${filearray[1]}"
+      else
+        echo "Failed to download datafile: ${datafile}" >&2
+        return 3
+      fi
+    else
+      echo "Incorrect format for datafile: ${datafile}" >&2
+      echo "  Please use format \"LOCATOR|ABS_LOCAL_PATH\"" >&2
+      return 2
+    fi
+  done
+}
+
+export -f installLibrarianPuppetModules installPuppetModules getHieraFile getHieraDataFiles
