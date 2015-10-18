@@ -14,6 +14,8 @@ function getfile {
       echo "  Function exited with code: $?" >&2
       return 2
     fi
+  elif [[ ${file} =~ ^file: ]]; then
+    url=${file}
   fi
 
   if [[ "x${url}" == "x" ]]; then
@@ -28,24 +30,33 @@ function getfile {
   fi
   filename=${dir}/${url##*/}
 
-  if which curl >/dev/null; then
-    if resp=$(curl --location --write-out %{http_code} --silent --output "${filename}" "${url}"); then
-      if [[ $resp -eq 200 ]]; then
-        echo ${filename}
-      else
-        echo "HTTP error on download: ${resp}" >&2
-        return 6
-      fi
-    else
-      echo "Curl command failed" >&2
-      return 5
-    fi
-  elif which wget >/dev/null; then
-    if wget --quiet -output-document "${filename}" "${url}"; then
+  if [[ ${url} =~ ^file: ]]; then
+    if cp "${file#file:}" "${filename}"; then
       echo ${filename}
     else
-      echo "Wget command failed" >&2
+      echo "Failed to copy file: ${file}" >&2
       return 5
+    fi
+  else
+    if which curl >/dev/null; then
+      if resp=$(curl --location --write-out %{http_code} --silent --output "${filename}" "${url}"); then
+        if [[ $resp -eq 200 ]]; then
+          echo ${filename}
+        else
+          echo "HTTP error on download: ${url} - ${resp}" >&2
+          return 6
+        fi
+      else
+        echo "Curl command failed" >&2
+        return 5
+      fi
+    elif which wget >/dev/null; then
+      if wget --quiet -output-document "${filename}" "${url}"; then
+        echo ${filename}
+      else
+        echo "Wget command failed" >&2
+        return 5
+      fi
     fi
   fi
 }
