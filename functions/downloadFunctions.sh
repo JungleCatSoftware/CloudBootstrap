@@ -29,8 +29,13 @@ function getfile {
   filename=${dir}/${url##*/}
 
   if which curl >/dev/null; then
-    if curl --location --silent --output "${filename}" "${url}"; then
-      echo ${filename}
+    if resp=$(curl --location --write-out %{http_code} --silent --output "${filename}" "${url}"); then
+      if [[ $resp -eq 200 ]]; then
+        echo ${filename}
+      else
+        echo "HTTP error on download: ${resp}" >&2
+        return 6
+      fi
     else
       echo "Curl command failed" >&2
       return 5

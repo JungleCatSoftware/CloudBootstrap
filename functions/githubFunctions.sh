@@ -13,7 +13,7 @@ function github_parse_path {
 
   user=$([[ ${loc} =~ ^github:([^/@]*) ]] && echo ${BASH_REMATCH[1]} || return 3)
   repo=$([[ ${loc} =~ ^github:[^/@]*/([^/@]*) ]] && echo ${BASH_REMATCH[1]} || return 3)
-  filepath=$([[ ${loc} =~ ^github:([^/@]*/){2}([^@]*)(@|$) ]] && echo ${BASH_REMATCH[2]})
+  filepath=$([[ ${loc} =~ ^github:([^/@]*/){2}([^@]*) ]] && echo ${BASH_REMATCH[2]})
   tag=$([[ ${loc} =~ @(.*)$ ]] && echo ${BASH_REMATCH[1]} || echo "master")
 
   if [[ "x${filepath}" == "x" ]]; then
@@ -22,7 +22,7 @@ function github_parse_path {
     GitHubURL=$githubraw
   fi
 
-  echo "${GitHubURL}" | sed 's/%user%/'"${user}"'/' | sed 's/%repo%/'"${repo}"'/' | sed 's/%tag%/'"${tag}"'/' | sed 's/%filepath%/'"${filepath/\//\\/}"'/'
+  echo "${GitHubURL}" | sed 's/%user%/'"${user}"'/' | sed 's/%repo%/'"${repo}"'/' | sed 's/%tag%/'"${tag}"'/' | sed 's/%filepath%/'"${filepath//\//\\/}"'/'
 }
 
 export -f github_parse_path

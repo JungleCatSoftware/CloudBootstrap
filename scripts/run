@@ -32,6 +32,33 @@ sed -i -E 's/^(export )?([[:alpha:]][[:alnum:]_]*=)/export \2/' "${file}"
 # Source the file
 . "${file}"
 
-if ! [[ "x${CONFIG_MANAGER}" == "x" ]]; then
-  installConfigManager "${CONFIG_MANAGER}" "${CONFIG_MODULES[@]}"
+CONFIG_MANAGER=$(echo "${CONFIG_MANAGER}" | tr '[:upper:]' '[:lower:]')
+
+if [[ "x${CONFIG_MANAGER}" == "x" ]]; then
+  echo "No config manager to install" >&2
+elif [[ "x${CONFIG_MANAGER}" == "xpuppet" ]]; then
+  installPuppet
+
+  # Librarian-Puppet config file
+  if ! [[ "x${PUPPET_LIBRARIAN_FILE}" == "x" ]]; then
+    installLibrarianPuppetModules "${PUPPET_LIBRARIAN_FILE}"
+  fi
+
+  # Manually defined modules to download and install
+  if [ ${#PUPPET_MODULES[@]} -ge 1 ]; then
+    installPuppetModules "${PUPPET_MODULES[@]}"
+  fi
+
+  # Download Hiera files
+  if ! [[ "x${HIERA_FILE}" == "x" ]]; then
+    if getHieraFile "${HIERA_FILE}"; then
+      # No point downloading the datafiles if the main config fails
+      getHieraDataFiles "${HIERA_DATA_FILES[@]}"
+    fi
+  fi
+
+  # Run puppet
+  puppet apply --hiera_config=/etc/puppet/hiera.yaml --modulepath=/etc/puppet/modules --execute "hiera_include('classes')"
+else
+  echo "Invalid Config Manager: ${CONFIG_MANAGER}" >&2
 fi
