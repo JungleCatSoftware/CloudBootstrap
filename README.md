@@ -19,6 +19,7 @@ curl -L https://raw.githubusercontent.com/JungleCatSoftware/CloudBootstrap/maste
 The CloudBootstrap scripts make use of various file locators, which are shorthand for various types of files, such as modules from the Puppet Forge or GitHub. The following are all supported locator prefixes since version 0.0.1:
  - forge:
  - github:
+ - file:
  - http://
  - https://
 
@@ -33,6 +34,9 @@ The GitHub locator reference a GitHub repository or a specific file within a rep
  - "github:camptocamp/puppet-openssl"
  - "github:JungleCatSoftware/CloudConfigs/example/config"
  - "github:JungleCatSoftware/CloudBootstrap/README.md@0.0.1"
+
+### File Locator
+The File locator is a handy way to reference a file on the local filesystem. The file at the referenced path will be copied to `/tmp` and the new path returned. This is useful for development environments in Vagrant to copy config files from the `/vagrant` mountpoint.
 
 ## The Config File
 The config file, which is referenced by the `ConfigFile` envionment variable when calling either the `bootstrap.sh` or `scripts/run` is a simple container of variable definitions which are used by the scripts in this repository. The variables that are used are detailed below.
