@@ -97,7 +97,7 @@ function getHieraDataFiles {
         ln "${file}" "${filearray[1]}"
       else
         echo "Failed to download datafile: ${datafile}" >&2
-        return 3
+        #return 3
       fi
     else
       echo "Incorrect format for datafile: ${datafile}" >&2
